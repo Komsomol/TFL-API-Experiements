@@ -22,7 +22,9 @@ const app = {
     goBtn: document.querySelector('.goBtn'),
     statusBtn: document.querySelector('.statusBtn'),
     submitPostcodeBtn: document.querySelector('.submitPostcodeBtn'),
-    inputField: document.querySelector('.inputField'),
+    submitRouteBtn: document.querySelector('.submitRouteBtn'),
+    originInput: document.querySelector('.originInput'),
+    destInput: document.querySelector('.destInput'),
     init: () =>{
         console.log('init');
 
@@ -31,7 +33,8 @@ const app = {
 
     bindEvents: () =>{
         //validaton check
-        app.utils = new utils(app.inputField);
+        app.utils = new utils(app.originInput);
+        app.utils_des = new utils(app.destInput);
 
         app.goBtn.addEventListener('click', ()=>{
             console.log('calling API');
@@ -50,11 +53,9 @@ const app = {
 
         app.submitPostcodeBtn.addEventListener('click', ()=>{
             // check if there is an input. 
-            // console.log(inputCheck.validateInput());
             let test = app.utils.validateInput();
 
             if(test.valid){
-                // console.log(inputCheck.getLatLongFromPostcode(inputCheck.passInput()));
                 app.utils.getLatLongFromPostcode(app.utils.passInput()).then((data)=>{
                     app.nearStations(data.result);
                 });
@@ -62,6 +63,38 @@ const app = {
                 alert(test.error);
             }
         });
+
+        app.submitRouteBtn.addEventListener('click', ()=>{
+            //route postcode to postcode
+            console.log("routing");
+
+            let origin = app.utils.validateInput();
+            let dest = app.utils_des.validateInput();
+
+            if(origin.valid && dest.valid){
+                console.log("both valid");
+                //transfrom both postcodes to lat long
+                app.route = [];
+                app.utils.getLatLongFromPostcode(app.utils.passInput()).then((data)=>{
+                    app.route.push(data.result);
+                    app.utils.getLatLongFromPostcode(app.utils_des.passInput()).then((data)=>{
+                        app.route.push(data.result);
+                        app.routingSystem();
+                    });
+                });
+            } else {
+                alert(`${origin.error} ... ${dest.error}`);
+            }
+            
+        });
+    },
+
+    routingSystem:()=>{
+        console.log(app.route);
+        console.log(app.route[0].latitude, app.route[0].longitude);
+        app.utils.route(app.route[0].latitude, app.route[0].longitude, app.route[1].latitude, app.route[1].longitude).then( (data)=>{
+            console.log(data);
+        })
     },
 
     nearStations(location){

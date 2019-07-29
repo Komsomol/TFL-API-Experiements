@@ -4,17 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <link type="stylesheet" href="css/main.css">
     <title>TFL</title>
 </head>
 <body>
-    <p>Oldstreet to Walthamstow Central</p>
-    <button class="goBtn">Go - Search using Station IDs</button>
-    <button class="statusBtn">Go - Tube Status All Lines</button>
-    <br>
-    <label for="input">Please enter postcode</label>
-    <input type="postcode" class="inputField">
-    <button class="submitPostcodeBtn">Look up postcode</button>
+    <section class="hero is-dark is-bold">
+        <div class="hero-body">
+            <h1 class="title">
+                TFL API
+            </h1>
+        </div>
+    </section>
+    <section class="section">
+        <div class="column is-half">
+            <div class="column">
+                <button class="goBtn button">Go - Search using Station IDs</button>
+                <button class="statusBtn button">Go - Tube Status All Lines</button>
+            </div>
+            <div class="column ">
+                <label class="label">Start postcode</label>
+                <input type="postcode" class="originInput input" placeholder="N1 6EB">
+            </div> 
+            <div class="column ">
+                <label class="label">End postcode</label>
+                <input type="postcode" class="destInput input" placeholder="E17 3LN">
+            </div>
+
+            <button class="submitPostcodeBtn button">Look up postcode to find local stations</button>
+            <button class="submitRouteBtn button">Route post code to post code</button>
+        </div>
+    </section>
+
 </body>
 <script src="js/main.js"></script>
 </html>
