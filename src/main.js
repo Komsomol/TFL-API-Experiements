@@ -1,4 +1,7 @@
 import {formatTime, getCoordArrayFromStr} from './utils';
+import inputValidation from './inputValidation';
+
+//https://api.tfl.gov.uk/Place?type=NaptanMetroStation,NaptanRailStation&lat=${lat}&lon=${lon}&radius=${radius}`
 
 // From Old Street to Walthamstow Central
 const tflurls = [
@@ -7,7 +10,6 @@ const tflurls = [
   "https://api.tfl.gov.uk/Line/circle/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
   "https://api.tfl.gov.uk/Line/bakerloo/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
   "https://api.tfl.gov.uk/Line/central/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
-  "https://api.tfl.gov.uk/Line/jubilee/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
   "https://api.tfl.gov.uk/Line/jubilee/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
   "https://api.tfl.gov.uk/Line/district/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
   "https://api.tfl.gov.uk/Line/dlr/Status?app_id=b4a85c72&app_key=477d4bfa78405cbb4359d721fc31dd92",
@@ -20,6 +22,8 @@ const app = {
     TFL: 'https://api.tfl.gov.uk/journey/journeyresults/1000169/to/1000249',
     goBtn: document.querySelector('.goBtn'),
     statusBtn: document.querySelector('.statusBtn'),
+    submitPostcodeBtn: document.querySelector('.submitPostcodeBtn'),
+    inputField: document.querySelector('.inputField'),
     init: () =>{
         console.log('init');
 
@@ -27,6 +31,9 @@ const app = {
     },
 
     bindEvents: () =>{
+        //validaton check
+        var inputCheck = new inputValidation(app.inputField);
+
         app.goBtn.addEventListener('click', ()=>{
             console.log('calling API');
             app.getDataAsync(app.TFL).then( (result) =>{
@@ -41,12 +48,27 @@ const app = {
                 app.showTubeStatus(result);
             });
         });
+
+        app.submitPostcodeBtn.addEventListener('click', ()=>{
+            // check if there is an input. 
+            // console.log(inputCheck.validateInput());
+            let test = inputCheck.validateInput();
+
+            if(test.valid){
+                console.log('Search Postcode')
+            } else {
+                alert(test.error);
+            }
+        });
     },
 
     showTubeStatus:(data) => {
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
-            console.log(element);
+            // console.log(element);
+            // console.log(typeof element);
+            console.log(data[i][0].name + ' ' + data[i][0].lineStatuses[0].statusSeverityDescription);
+            // console.log(data[i][0].lineStatuses[0].statusSeverityDescription);
         }
     },
 
@@ -84,8 +106,7 @@ const app = {
             app.getDataAsync(urls[6]),
             app.getDataAsync(urls[7]),
             app.getDataAsync(urls[8]),
-            app.getDataAsync(urls[9]),
-            app.getDataAsync(urls[10]),
+            app.getDataAsync(urls[9])
         ]);
         return response;
     },
