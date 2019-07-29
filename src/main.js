@@ -1,5 +1,4 @@
-import {formatTime, getCoordArrayFromStr} from './utils';
-import inputValidation from './inputValidation';
+import utils from './utils';
 
 //https://api.tfl.gov.uk/Place?type=NaptanMetroStation,NaptanRailStation&lat=${lat}&lon=${lon}&radius=${radius}`
 
@@ -32,7 +31,7 @@ const app = {
 
     bindEvents: () =>{
         //validaton check
-        var inputCheck = new inputValidation(app.inputField);
+        app.utils = new utils(app.inputField);
 
         app.goBtn.addEventListener('click', ()=>{
             console.log('calling API');
@@ -52,12 +51,12 @@ const app = {
         app.submitPostcodeBtn.addEventListener('click', ()=>{
             // check if there is an input. 
             // console.log(inputCheck.validateInput());
-            let test = inputCheck.validateInput();
+            let test = app.utils.validateInput();
 
             if(test.valid){
-                console.log(inputCheck.getLatLongFromPostcode(inputCheck.passInput()));
-                inputCheck.getLatLongFromPostcode(inputCheck.passInput()).then((data)=>{
-                    app.nearStations(data.results);
+                // console.log(inputCheck.getLatLongFromPostcode(inputCheck.passInput()));
+                app.utils.getLatLongFromPostcode(app.utils.passInput()).then((data)=>{
+                    app.nearStations(data.result);
                 });
             } else {
                 alert(test.error);
@@ -69,7 +68,9 @@ const app = {
         console.log(location.latitude, location.longitude, location.admin_district, location.postcode);
 
         // search TFL API for stations close to this location. 
-
+        app.utils.getServices(location.latitude, location.longitude).then( (result) =>{
+            console.log(result);
+        });
     },
 
     showTubeStatus:(data) => {
@@ -90,7 +91,7 @@ const app = {
         console.log(data.journeys[0].arrivalDateTime);
         console.log(data.journeys[0].duration);
     
-        console.log(formatTime((data.journeys[0].arrivalDateTime)));
+        console.log(app.utils.formatTime((data.journeys[0].arrivalDateTime)));
         console.log(typeof data.journeys[0].legs);
 
         data.journeys.forEach(element => {
