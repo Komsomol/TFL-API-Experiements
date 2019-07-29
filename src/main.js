@@ -55,11 +55,21 @@ const app = {
             let test = inputCheck.validateInput();
 
             if(test.valid){
-                console.log('Search Postcode')
+                console.log(inputCheck.getLatLongFromPostcode(inputCheck.passInput()));
+                inputCheck.getLatLongFromPostcode(inputCheck.passInput()).then((data)=>{
+                    app.nearStations(data.results);
+                });
             } else {
                 alert(test.error);
             }
         });
+    },
+
+    nearStations(location){
+        console.log(location.latitude, location.longitude, location.admin_district, location.postcode);
+
+        // search TFL API for stations close to this location. 
+
     },
 
     showTubeStatus:(data) => {
