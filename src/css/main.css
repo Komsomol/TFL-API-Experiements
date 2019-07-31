@@ -1,0 +1,46 @@
+html{
+    background-color:whitesmoke;
+}
+
+/* tube status screen */
+.tubestatus{
+    margin: 1px;
+    display: flex;
+    flex-direction: column
+}
+
+.tube-status{
+    padding:5px;
+    color:white;
+}
+
+.Victoria{
+    background-color:#03a3e0;
+}
+.Northern{
+    background-color:#000000;
+}
+.Circle{
+    background-color:#ffcd01;
+}
+.Bakerloo{
+    background-color:#a45a2a;
+}
+.Central{
+    background-color:#da291d;
+}
+.Jubilee{
+    background-color:#7c878e;
+}
+.District{
+    background-color:#007a33;
+}
+.DLR{
+    background-color:#00b2a9;
+}
+.Metropolitan{
+    background-color:#840c55;
+}
+.Piccadilly{
+    background-color:#0f07a0;
+}

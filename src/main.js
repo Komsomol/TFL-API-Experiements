@@ -1,5 +1,5 @@
 import utils from './utils';
-
+import './css/main.css';
 //https://api.tfl.gov.uk/Place?type=NaptanMetroStation,NaptanRailStation&lat=${lat}&lon=${lon}&radius=${radius}`
 
 // From Old Street to Walthamstow Central
@@ -25,6 +25,8 @@ const app = {
     submitRouteBtn: document.querySelector('.submitRouteBtn'),
     originInput: document.querySelector('.originInput'),
     destInput: document.querySelector('.destInput'),
+    resultscreen: document.querySelector('.results'),
+    tubestatus: document.querySelector('.tubestatus'),
     init: () =>{
         console.log('init');
 
@@ -35,7 +37,8 @@ const app = {
         //validaton check
         app.utils = new utils(app.originInput);
         app.utils_des = new utils(app.destInput);
-
+        
+        // search using station id from work to home
         app.goBtn.addEventListener('click', ()=>{
             console.log('calling API');
             app.getDataAsync(app.TFL).then( (result) =>{
@@ -43,14 +46,16 @@ const app = {
                 app.displayData(result);
             });
         });
-
+        
+        // tube status for all lines
         app.statusBtn.addEventListener('click', ()=>{
             console.log('calling API');
             app.getAllTubeStatus(tflurls).then((result) =>{
                 app.showTubeStatus(result);
             });
         });
-
+        
+        // look up postcode to find local stations
         app.submitPostcodeBtn.addEventListener('click', ()=>{
             // check if there is an input. 
             let test = app.utils.validateInput();
@@ -64,6 +69,7 @@ const app = {
             }
         });
 
+        // route from point to point
         app.submitRouteBtn.addEventListener('click', ()=>{
             //route postcode to postcode
             console.log("routing");
@@ -94,7 +100,18 @@ const app = {
         console.log(app.route[0].latitude, app.route[0].longitude);
         app.utils.route(app.route[0].latitude, app.route[0].longitude, app.route[1].latitude, app.route[1].longitude).then( (data)=>{
             console.log(data);
-        })
+            app.renderData(data);
+        });
+    },
+
+    renderData:(data)=>{
+        console.log(data.journeys.length);
+
+        for (let i = 0; i < data.journeys.length; i++) {
+            const element = data.journeys[i];
+            console.log(`Estimated time of arrival is ${app.utils.formatTime(data.journeys[i].arrivalDateTime)}`);
+            console.log(`Duration of journey is ${data.journeys[i].duration}`);
+        }
     },
 
     nearStations(location){
@@ -106,14 +123,21 @@ const app = {
         });
     },
 
+    // tube status
     showTubeStatus:(data) => {
+        const c = document.createDocumentFragment();
+
         for (let i = 0; i < data.length; i++) {
             const element = data[i];
-            // console.log(element);
-            // console.log(typeof element);
+            let e = document.createElement("div");
+            e.className = `tube-status ${data[i][0].name}`;
+            e.textContent = `${data[i][0].name} is currently running with a ${data[i][0].lineStatuses[0].statusSeverityDescription}`;
+            c.appendChild(e);
             console.log(data[i][0].name + ' ' + data[i][0].lineStatuses[0].statusSeverityDescription);
             // console.log(data[i][0].lineStatuses[0].statusSeverityDescription);
         }
+
+        app.tubestatus.appendChild(c);
     },
 
     displayData: (data) =>{

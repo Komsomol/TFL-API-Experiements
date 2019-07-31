@@ -22,18 +22,21 @@
             <div class="column">
                 <button class="goBtn button">Go - Search using Station IDs</button>
                 <button class="statusBtn button">Go - Tube Status All Lines</button>
-            </div>
-            <div class="column ">
+            
+
                 <label class="label">Start postcode</label>
                 <input type="postcode" class="originInput input" placeholder="N1 6EB">
-            </div> 
-            <div class="column ">
+
                 <label class="label">End postcode</label>
                 <input type="postcode" class="destInput input" placeholder="E17 3LN">
-            </div>
+            
+                <button class="submitPostcodeBtn button">Look up postcode to find local stations</button>
+                <button class="submitRouteBtn button">Route post code to post code</button>
 
-            <button class="submitPostcodeBtn button">Look up postcode to find local stations</button>
-            <button class="submitRouteBtn button">Route post code to post code</button>
+                <div class="results">
+                    <div class="tubestatus"></div>
+                </div>
+            </div>
         </div>
     </section>
 
