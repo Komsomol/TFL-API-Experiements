@@ -105,13 +105,48 @@ const app = {
     },
 
     renderData:(data)=>{
-        console.log(data.journeys.length);
+        // console.log(data.journeys.length);
 
-        for (let i = 0; i < data.journeys.length; i++) {
-            const element = data.journeys[i];
-            console.log(`Estimated time of arrival is ${app.utils.formatTime(data.journeys[i].arrivalDateTime)}`);
-            console.log(`Duration of journey is ${data.journeys[i].duration}`);
-        }
+        // for (let i = 0; i < data.journeys.length; i++) {
+        //     const element = data.journeys[i];
+        //     console.log(`Estimated time of arrival is ${app.utils.formatTime(data.journeys[i].arrivalDateTime)}`);
+        //     console.log(`Duration of journey is ${data.journeys[i].duration}`);
+        //     for (let index = 0; index < data.journeys[i].legs.length; index++) {
+        //         const element = data.journeys[i].legs[index];
+        //         console.log(element);
+        //         console.log(element.instruction.detailed);
+        //         console.log(element.instruction.duration);
+        //     }
+        // }
+
+        data.journeys.forEach((item,index) =>{
+            console.log(`===== JOURNEY ${index} will take ${item.duration} minutes, arriving at ${app.utils.formatTime(item.arrivalDateTime)}=====`)
+            item.legs.forEach((legstep,index) =>{
+                // console.log(legstep);
+                let mode;
+                
+                switch (legstep.mode.name) {
+                    case 'tube':
+                    case 'national-rail':
+                    case "overground":
+                        mode = 'Take the ';
+                        break;
+                    case "walking":
+                        mode='';
+                        break;
+                    default:
+                        break;
+                }
+                console.log(`${mode}${legstep.instruction.summary}`);
+                
+                // if(legstep.instruction.steps.length > 0){
+                //     legstep.instruction.steps.forEach(step=>{
+                //         // console.log(legstep.instruction.steps);
+                //         console.log(`${step.descriptionHeading} ${step.description}`);
+                //     });
+                // }
+            });
+        });
     },
 
     nearStations(location){
