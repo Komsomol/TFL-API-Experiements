@@ -137,12 +137,12 @@ const app = {
             let e = document.createElement("div");
             e.className = element.number;
             e.textContent = `${element.starttime} --> ${element.arrivaltime}. Will take ${element.duration} minutes`;
-            let steps = document.createElement("div");
-           
-            // for (let z = 0; z < array.length; z++) {
-            //     const element = array[z];
-                
-            // }
+            
+                let steps = document.createElement("div");
+                element.steps.forEach(element => {
+                        
+                });
+            
             e.appendChild(steps);
             c.appendChild(e);
             console.log(element);
