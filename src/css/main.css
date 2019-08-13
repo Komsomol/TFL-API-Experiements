@@ -1,5 +1,6 @@
 html{
     background-color:whitesmoke;
+    text-rendering:optimizeSpeed;
 }
 
 /* tube status screen */

@@ -100,56 +100,59 @@ const app = {
         console.log(app.route[0].latitude, app.route[0].longitude);
         app.utils.route(app.route[0].latitude, app.route[0].longitude, app.route[1].latitude, app.route[1].longitude).then( (data)=>{
             console.log(data);
-            app.renderData(data);
+            app.cleanUpData(data);
         });
+    },
+
+    cleanUpData:(data)=>{
+        // console.log(data);
+
+        let journey = [];
+        data.journeys.forEach((item,index) =>{
+            // console.log(item);
+            let obj = {}; 
+            // obj.journey = `${item.duration} minutes, arriving at ${app.utils.formatTime(item.arrivalDateTime)}`;
+            // console.log(`===== JOURNEY ${index} will take ${item.duration} minutes, arriving at ${app.utils.formatTime(item.arrivalDateTime)}=====`);
+            obj.number = index;
+            obj.duration = item.duration;
+            // obj.steps = item.legs; 
+            obj.starttime = app.utils.formatTime(item.startDateTime);
+            obj.arrivaltime = app.utils.formatTime(item.arrivalDateTime);
+            let steps = [];
+            item.legs.forEach( item =>{
+                steps.push(item.instruction.summary);
+            });
+            obj.steps = steps;
+            journey.push(obj);
+        });
+
+        app.renderData(journey);
     },
 
     renderData:(data)=>{
-        // console.log(data.journeys.length);
+        const c = document.createDocumentFragment();
 
-        // for (let i = 0; i < data.journeys.length; i++) {
-        //     const element = data.journeys[i];
-        //     console.log(`Estimated time of arrival is ${app.utils.formatTime(data.journeys[i].arrivalDateTime)}`);
-        //     console.log(`Duration of journey is ${data.journeys[i].duration}`);
-        //     for (let index = 0; index < data.journeys[i].legs.length; index++) {
-        //         const element = data.journeys[i].legs[index];
-        //         console.log(element);
-        //         console.log(element.instruction.detailed);
-        //         console.log(element.instruction.duration);
-        //     }
-        // }
+        for (let i = 0; i < data.length; i++) {
+            const element = data[i];
+            let e = document.createElement("div");
+            e.className = element.number;
+            e.textContent = `${element.starttime} --> ${element.arrivaltime}. Will take ${element.duration} minutes`;
+            let steps = document.createElement("div");
+           
+            // for (let z = 0; z < array.length; z++) {
+            //     const element = array[z];
+                
+            // }
+            e.appendChild(steps);
+            c.appendChild(e);
+            console.log(element);
+            
+        }
 
-        data.journeys.forEach((item,index) =>{
-            console.log(`===== JOURNEY ${index} will take ${item.duration} minutes, arriving at ${app.utils.formatTime(item.arrivalDateTime)}=====`)
-            item.legs.forEach((legstep,index) =>{
-                // console.log(legstep);
-                let mode;
-                
-                switch (legstep.mode.name) {
-                    case 'tube':
-                    case 'national-rail':
-                    case "overground":
-                        mode = 'Take the ';
-                        break;
-                    case "walking":
-                        mode='';
-                        break;
-                    default:
-                        break;
-                }
-                console.log(`${mode}${legstep.instruction.summary}`);
-                
-                // if(legstep.instruction.steps.length > 0){
-                //     legstep.instruction.steps.forEach(step=>{
-                //         // console.log(legstep.instruction.steps);
-                //         console.log(`${step.descriptionHeading} ${step.description}`);
-                //     });
-                // }
-            });
-        });
+        app.resultscreen.appendChild(c);
     },
 
-    nearStations(location){
+    nearStations:(location) =>{
         console.log(location.latitude, location.longitude, location.admin_district, location.postcode);
 
         // search TFL API for stations close to this location. 
